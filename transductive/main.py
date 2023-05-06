@@ -49,27 +49,80 @@ if __name__ == '__main__':
 	# argparser
 	parser = argparse.ArgumentParser()
 	parser.add_argument('--seed', type=int, default=42)
-	
+
 	parser.add_argument('--bert_lr', type=float, default=1e-5)
 	parser.add_argument('--model_lr', type=float, default=5e-4)
-	parser.add_argument('--batch_size', type=int, default=64)
+	parser.add_argument('--batch_size', type=int, default=100)
 	parser.add_argument('--epoch', type=int, default=100)
 	parser.add_argument('--weight_decay', type=float, default=1e-6)
-	parser.add_argument('--data', type=str, default='fb15k-237') 
-	parser.add_argument('--plm', type=str, default='bert', choices = ['bert', 'bert_tiny', 'deberta'])
-	parser.add_argument('--self_adversarial', default=False, action = 'store_true', help = 'self adversarial negative sampling')
-	parser.add_argument('--model', type=str, default='NTRL', choices = ['NTRL', 'BLP', 'DKRL'])
-	parser.add_argument('--text_type', type=str, default='neighbor_text', choices=['neighbor_text', 'desc_text', 'con_text'])
-	parser.add_argument('--num_facts', type=int, default=0, help = 'the number of entity first-order neighborhood facts')
+	parser.add_argument('--data', type=str, default='fb15k-237')
+	parser.add_argument('--plm', type=str, default='bert', choices=['bert', 'bert_tiny', 'deberta'])
+	parser.add_argument('--self_adversarial', default=True, action='store_true',
+						help='self adversarial negative sampling')
+	parser.add_argument('--model', type=str, default='NTRL', choices=['NTRL', 'BLP', 'DKRL'])
+	parser.add_argument('--text_type', type=str, default='neighbor_text',
+						choices=['neighbor_text', 'desc_text', 'con_text'])
+	parser.add_argument('--num_facts', type=int, default=10, help='the number of entity first-order neighborhood facts')
 	parser.add_argument('--num_tokens', type=int, default=50, help='the number of entity description text tokens')
-	parser.add_argument('--score_function', type=str, default='cross_mln', choices = ['transe', 'distmult', 'complex','simple','mln','cross_mln'])
+	parser.add_argument('--score_function', type=str, default='cross_mln',
+						choices=['transe', 'distmult', 'complex', 'simple', 'mln', 'cross_mln'])
 	parser.add_argument('--hr', default=False, action='store_true', help='hr cross feature')
 	parser.add_argument('--tr', default=False, action='store_true', help='tr cross feature')
 	parser.add_argument('--ht', default=False, action='store_true', help='ht cross feature')
 	parser.add_argument('--hrt', default=False, action='store_true', help='hrt cross feature')
-	parser.add_argument('--lamda', type=str,default='lamda1', choices = ['lamda1', 'lamda2'])
+	parser.add_argument('--lamda', type=str, default='lamda1', choices=['lamda1', 'lamda2'])
 	arg = parser.parse_args()
 
+	'''
+	Paper Result Parameter Settings:
+
+	NTRL: 
+	python main.py  --data fb15k-237 --hr --tr --ht --hrt --num_facts 20 --epoch 10  
+	python main.py  --data wn18rr  --hr --tr --hrt 
+	python main.py  --data umls  --hr --tr --model_lr 1e-5 --lamda lamda2 
+	NTRL-D: 
+	python main.py  --data fb15k-237  --text_type desc_text --hr --tr --ht --hrt --epoch 10 
+	python main.py  --data wn18rr  --text_type desc_text --hr --tr --hrt 
+	python main.py  --data umls  --text_type desc_text --hr --tr  --model_lr 1e-5 --lamda lamda2 
+	NTRL-C:
+	python main.py  --data fb15k-237  --text_type con_text --num_facts 20 --hr --tr --ht --hrt --epoch 10 
+	python main.py  --data wn18rr  --text_type con_text --hr --tr --hrt 
+	python main.py  --data umls  --text_type con_text --hr --tr --model_lr 1e-5 --lamda lamda2 
+	NTRL_N:
+	python main.py  --data fb15k-237  --num_facts 0 --hr --tr --ht --hrt --epoch 10 
+	python main.py  --data wn18rr  --num_facts 0 --hr --tr --hrt 
+	python main.py  --data umls  --num_facts 0 --hr --tr  --model_lr 1e-5 --lamda lamda2 
+
+	BLP-TE: 
+	python main.py  --data fb15k-237 --model BLP --text_type desc_text --score_function transe 
+	python main.py  --data wn18rr --model BLP --text_type desc_text --score_function transe 
+	python main.py  --data umls --model BLP --text_type desc_text --score_function transe --model_lr 1e-5 --lamda lamda2
+	BLP-DM:
+	python main.py  --data fb15k-237 --model BLP --text_type desc_text --score_function distmult
+	python main.py  --data wn18rr --model BLP --text_type desc_text --score_function distmult
+	python main.py  --data umls --model BLP --text_type desc_text --score_function distmult --model_lr 1e-5 --lamda lamda2
+	BLP-CE:
+	python main.py  --data fb15k-237 --model BLP --text_type desc_text --score_function complex
+	python main.py  --data wn18rr --model BLP --text_type desc_text --score_function complex
+	python main.py  --data umls --model BLP --text_type desc_text --score_function complex --model_lr 1e-5 --lamda lamda2
+	BLP-SE:
+	python main.py  --data fb15k-237 --model BLP --text_type desc_text --score_function simple
+	python main.py  --data wn18rr --model BLP --text_type desc_text --score_function simple
+	python main.py  --data umls --model BLP --text_type desc_text --score_function simple --model_lr 1e-5 --lamda lamda2
+	BLP-MLN:
+	python main.py  --data fb15k-237 --model BLP --text_type desc_text --score_function mln
+	python main.py  --data wn18rr --model BLP --text_type desc_text --score_function mln
+	python main.py  --data umls --model BLP --text_type desc_text --score_function mln --model_lr 1e-5 --lamda lamda2
+
+	DKRL-TE:
+	python main.py  --data fb15k-237 --model DKRL --text_type desc_text --score_function transe
+	python main.py  --data wn18rr --model DKRL --text_type desc_text --score_function transe
+	python main.py  --data umls --model DKRL --text_type desc_text --score_function transe --model_lr 1e-5 --lamda lamda2
+	DKRL-SE: 
+	python main.py  --data fb15k-237 --model DKRL --text_type desc_text --score_function simple
+	python main.py  --data wn18rr --model DKRL --text_type desc_text --score_function simple
+	python main.py  --data umls --model DKRL --text_type desc_text --score_function simple --model_lr 1e-5 --lamda lamda2
+	'''
 
 	# Set random seed
 	random.seed(arg.seed)

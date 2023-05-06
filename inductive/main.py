@@ -50,17 +50,17 @@ if __name__ == '__main__':
 
 	parser.add_argument('--bert_lr', type=float, default=1e-5)
 	parser.add_argument('--model_lr', type=float, default=5e-4)
-	parser.add_argument('--batch_size', type=int, default=64)
+	parser.add_argument('--batch_size', type=int, default=16)
 	parser.add_argument('--epoch', type=int, default=30)
 	parser.add_argument('--weight_decay', type=float, default=1e-6)
-	parser.add_argument('--data', type=str, default='fb15k-237')
+	parser.add_argument('--data', type=str, default='fb237_v1')
 	parser.add_argument('--plm', type=str, default='bert', choices=['bert', 'bert_tiny', 'deberta'])
-	parser.add_argument('--self_adversarial', default=False, action='store_true',
+	parser.add_argument('--self_adversarial', default=True, action='store_true',
 						help='self adversarial negative sampling')
 	parser.add_argument('--model', type=str, default='NTRL', choices=['NTRL', 'BLP', 'DKRL'])
 	parser.add_argument('--text_type', type=str, default='neighbor_text',
 						choices=['neighbor_text', 'desc_text', 'con_text'])
-	parser.add_argument('--num_facts', type=int, default=0, help='the number of entity first-order neighborhood facts')
+	parser.add_argument('--num_facts', type=int, default=10, help='the number of entity first-order neighborhood facts')
 	parser.add_argument('--num_tokens', type=int, default=50, help='the number of entity description text tokens')
 	parser.add_argument('--score_function', type=str, default='cross_mln',
 						choices=['transe', 'distmult', 'complex', 'simple', 'mln', 'cross_mln'])
@@ -70,6 +70,31 @@ if __name__ == '__main__':
 	parser.add_argument('--hrt', default=False, action='store_true', help='hrt cross feature')
 	parser.add_argument('--lamda', type=str, default='lamda1', choices=['lamda1', 'lamda2'])
 	arg = parser.parse_args()
+
+	'''
+	Paper Result Parameter Settings:
+
+	NTRL: 
+	python main.py  --data fb237_v1  --hr --tr --ht --hrt 
+	python main.py  --data wn18rr_v1  --hr --tr --hrt
+	NTRL-D:
+	python main.py  --data fb237_v1  --text_type desc_text --hr --tr --ht --hrt
+	python main.py  --data wn18rr_v1  --text_type desc_text --hr --tr --hrt
+	NTRL-C: 
+	python main.py  --data fb237_v1  --text_type con_text --hr --tr --ht --hrt
+	python main.py  --data wn18rr_v1  --text_type con_text --hr --tr --hrt
+
+	BLP-CE: 
+	python main.py  --data fb237_v1 --model BLP --text_type desc_text --score_function complex
+	python main.py  --data wn18rr_v1 --model BLP --text_type desc_text --score_function complex
+	BLP-SE:
+	python main.py  --data fb237_v1 --model BLP --text_type desc_text --score_function simple
+	python main.py  --data wn18rr_v1 --model BLP --text_type desc_text --score_function simple
+
+	DKRL-SE: 
+	python main.py  --data fb237_v1 --model DKRL --text_type desc_text --score_function simple
+	python main.py  --data wn18rr_v1 --model DKRL --text_type desc_text --score_function simple
+	'''
 
 	# Set random seed
 	random.seed(arg.seed)
