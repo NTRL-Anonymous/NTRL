@@ -1,8 +1,6 @@
 # NTRL
-Knowledge Graph Representation Learning with Entity Neighborhood Text
-# Language Models as Knowledge Embeddings
 
-Source code for the paper Language Models as Knowledge Embeddings
+Source code for the paper Knowledge Graph Representation Learning with Entity Neighborhood Text
 
 ## Requirements
 
@@ -11,21 +9,19 @@ Source code for the paper Language Models as Knowledge Embeddings
 - transformers
 - tqdm
 - Python version >= 3.6
-
 ## Usage
-
-Run main.py to train or test our models. 
-
-An example for training for triple classification:
+For transductive reasoning:
 
 ```bash
-python main.py --batch_size 16 --plm bert --data wn18rr --task TC
+cd transductive
+python main.py --batch_size 16 --plm bert   --data wn18rr  --self_adversarial --hr --tr --hrt --num_facts 10  --epoch  100
 ```
 
-An example for training for link prediction:
+For inductive reasoning:
 
 ```bash
-python main.py --batch_size 16 --plm bert --contrastive --self_adversarial --data wn18rr --task LP 
+cd inductive
+python main.py --batch_size 16 --plm bert   --data wn18rr_v1  --self_adversarial --hr --tr --hrt --num_facts 10  --epoch  30
 ```
 
 The arguments are as following:
@@ -33,18 +29,20 @@ The arguments are as following:
 * `--model_lr`: learning rate of other parameters.
 * `--batch_size`: batch size used in training.
 * `--weight_decay`: weight dacay used in training.
-* `--data`: name of the dataset. Choose from 'fb15k-237', 'wn18rr', 'fb13' and 'umls'.
+* `--data`: name of the dataset.
 * `--plm`: choice of the language model. Choose from 'bert' and 'bert_tiny'.
-* `--load_path`: path of checkpoint to load.
-* `--load_epoch`: load the checkpoint of a specific epoch. Use with --load_metric.
-* `--load_metric`: use with --load_epoch.
-* `--link_prediction`: run link prediction evaluation after loading a checkpoint.
-* `--triple_classification`: run triple classification evaluation after loading a checkpoint.
 * `--self_adversarial`: use self-adversarial negative sampling for efficient KE learning.
-* `--contrastive`: use contrastive LMKE.
-* `--task`: specify the task. Choose from 'LP' (link prediction) and 'TC' (triple classification).
-
+* `--model`: choice of the model. Choose from 'NTRL', 'BLP' and 'DKRL'.
+* `--text_type`: choice of the text type. Choose from 'neighbor_text', 'desc_text' and 'con_text'.
+* `--num_facts`: the number of entity first-order neighborhood facts.
+* `--num_tokens`: the number of entity description text tokens.
+* `--score_function`: choice of score function. Choose from 'transe', 'distmult' , 'complex' , 'simple' , 'mln' and 'cross_mln'.
+* `--hr`: use hr cross feature for 'cross_mln' score function.
+* `--tr`: use tr cross feature for 'cross_mln' score function.
+* `--ht`: use ht cross feature for 'cross_mln' score function.
+* `--hrt`: use hrt cross feature for 'cross_mln' score function..
+* `--lamda`: choice of coefficient lamda . Choose from 'lamda1' and 'lamda2'.
 
 ### Datasets
 
-The datasets are put in the folder 'data', including fb15k-237, WN18RR, FB13 and umls.
+The datasets are put in the folder 'transductive/data' and 'inductive/data'.
