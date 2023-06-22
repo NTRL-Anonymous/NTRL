@@ -52,7 +52,7 @@ if __name__ == '__main__':
 
 	parser.add_argument('--bert_lr', type=float, default=1e-5)
 	parser.add_argument('--model_lr', type=float, default=5e-4)
-	parser.add_argument('--batch_size', type=int, default=100)
+	parser.add_argument('--batch_size', type=int, default=16)
 	parser.add_argument('--epoch', type=int, default=100)
 	parser.add_argument('--weight_decay', type=float, default=1e-6)
 	parser.add_argument('--data', type=str, default='fb15k-237')
