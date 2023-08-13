@@ -1,6 +1,6 @@
-# NTRL
+# NTIE
 
-Source code for the paper Knowledge Graph Representation Learning with Entity Neighborhood Text
+Source code for the paper Inductive Knowledge Embedding by Entity Neighborhood Text
 
 ## Requirements
 
@@ -14,14 +14,14 @@ For transductive reasoning:
 
 ```bash
 cd transductive
-python main.py --batch_size 16 --plm bert   --data wn18rr  --self_adversarial --hr --tr --hrt --num_facts 10  --epoch  100
+python main.py --batch_size 16 --plm bert   --data wn18rr  --self_adversarial --num_facts 10  --epoch  50
 ```
 
 For inductive reasoning:
 
 ```bash
 cd inductive
-python main.py --batch_size 16 --plm bert   --data wn18rr_v1  --self_adversarial --hr --tr --hrt --num_facts 10  --epoch  30
+python main.py --batch_size 16 --plm bert   --data wn18rr_v1  --self_adversarial --num_facts 10  --epoch  30
 ```
 
 The arguments are as following:
@@ -32,15 +32,11 @@ The arguments are as following:
 * `--data`: name of the dataset.
 * `--plm`: choice of the language model. Choose from 'bert' and 'bert_tiny'.
 * `--self_adversarial`: use self-adversarial negative sampling for efficient KE learning.
-* `--model`: choice of the model. Choose from 'NTRL', 'BLP' and 'DKRL'.
+* `--model`: choice of the model. Choose from 'NTIE', 'BLP' and 'DKRL'.
 * `--text_type`: choice of the text type. Choose from 'neighbor_text', 'desc_text' and 'con_text'.
 * `--num_facts`: the number of entity first-order neighborhood facts.
 * `--num_tokens`: the number of entity description text tokens.
-* `--score_function`: choice of score function. Choose from 'transe', 'distmult' , 'complex' , 'simple' , 'mln' and 'cross_mln'.
-* `--hr`: use hr cross feature for 'cross_mln' score function.
-* `--tr`: use tr cross feature for 'cross_mln' score function.
-* `--ht`: use ht cross feature for 'cross_mln' score function.
-* `--hrt`: use hrt cross feature for 'cross_mln' score function..
+* `--score_function`: choice of score function. Choose from 'transe', 'distmult' , 'complex' , 'simple' , 'FCN' and 'ProdFCN'.
 * `--lamda`: choice of coefficient lamda . Choose from 'lamda1' and 'lamda2'.
 
 ### Datasets
