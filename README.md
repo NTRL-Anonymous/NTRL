@@ -1,6 +1,6 @@
-# NTIE
+# LTKE
 
-Source code for the paper Inductive Knowledge Embedding by Entity Neighborhood Text
+Source code for the paper Open-world Knowledge Embedding in a Low Text Resource Environment
 
 ## Requirements
 
